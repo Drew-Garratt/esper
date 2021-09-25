@@ -1,0 +1,8 @@
+{
+  "name": "esper",
+  "private": true,
+  "workspaces": [
+    "app",
+    "theme"
+  ]
+}
