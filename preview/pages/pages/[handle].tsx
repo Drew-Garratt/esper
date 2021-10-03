@@ -1,20 +1,29 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
 import useSWR from 'swr';
 import fetch from '../../lib/fetch'
 import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
+const env = process.env.NODE_ENV
 
 const Page: NextPage = () => {
   const router = useRouter()
   const { handle } = router.query
-  const { data: section = { section_id: null }, error } = useSWR<{
-    section_id: number | null
-  }>(
-      "https://next-esper.myshopify.com/pages/test?view=data", fetch);
+  const page = {
+    section_id: ""
+  }
+  const { data, error } = useSWR<string>(
+      env == "development" ?
+          "/api/pages/test?view=data" :
+          "/pages/test?view=data"
+      , fetch);
   if (error) return <div>Failed to load posts</div>;
-  if (!section.section_id) return <div>loading...</div>;
+  if(data) {
+    const dataJson = JSON.parse(data.replace(/(<([^>]+)>)/gi, ""))
+    page.section_id = dataJson.section_id
+  }
+  console.log(page)
 
   return (
       <div className={styles.container}>
@@ -28,8 +37,6 @@ const Page: NextPage = () => {
           <h1 className={styles.title}>
             Welcome to <a href="https://nextjs.org">Next.js!</a>
           </h1>
-
-          {section.section_id}
 
           <p className={styles.description}>
             Get started by editing{' '}
@@ -67,6 +74,11 @@ const Page: NextPage = () => {
           </div>
         </main>
 
+        {data && <div id={`shopify-section-${page.section_id}`} className="shopify-section">
+          <p>test section</p>
+        </div>}
+
+
         <footer className={styles.footer}>
           <a
               href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
@@ -83,4 +95,4 @@ const Page: NextPage = () => {
   )
 }
 
-export default withUrqlClient(() => ({ url: 'https://next-esper.myshopify.com' }))(Page);
+export default withUrqlClient(() => ({ url: '/api' }))(Page);

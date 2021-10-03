@@ -11,13 +11,4 @@ module.exports = withPreact({
       '/pages/test': { page: '/pages/[handle]' },
     }
   },
-  async redirects() {
-    return [
-      {
-        source: '/password',
-        destination: '/api/password',
-        permanent: true,
-      },
-    ]
-  },
 });
