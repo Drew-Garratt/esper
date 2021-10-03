@@ -9,12 +9,6 @@ import { useRouter } from 'next/router';
 const Home: NextPage = () => {
   const router = useRouter()
   const { slug } = router.query
-  const { data: section = { section_id: null }, error } = useSWR<{
-    section_id: number | null
-  }>(
-      "https://next-esper.myshopify.com/pages/test?view=data", fetch);
-  if (error) return <div>Failed to load posts</div>;
-  if (!section.section_id) return <div>loading...</div>;
 
   return (
     <div className={styles.container}>
@@ -28,8 +22,6 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-
-        {section.section_id}
 
         <p className={styles.description}>
           Get started by editing{' '}
