@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import useSWR from 'swr';
-import fetch from '../../lib/fetch'
+import { fetchString } from '../../lib/fetch'
 import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 const env = process.env.NODE_ENV
@@ -17,7 +17,7 @@ const Page: NextPage = () => {
       env == "development" ?
           "/api/pages/test?view=data" :
           "/pages/test?view=data"
-      , fetch);
+      , fetchString);
   if (error) return <div>Failed to load posts</div>;
   if(data) {
     const dataJson = JSON.parse(data.replace(/(<([^>]+)>)/gi, ""))
